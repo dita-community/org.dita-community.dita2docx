@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project basedir="." name="org.dita-community.dita2docx">
+  
+  <import file="build_dita2docx.xml"/>
+  
+</project>

@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project basedir="." name="dita2docx" default="package">
+  
+
+  <property file="~/.build.properties"/>
+  <property file=".build.properties"/>
+  <property file="version.properties"/>
+  
+  
+  <property name="plugin.name" value="org.dita-community.dita2docx"/>
+  <property name="build.dir" value="${basedir}/build"/> 
+  <property name="temp.dir" value="${basedir}/temp"/> 
+  <property name="dist.dir" value="${basedir}/dist"/>
+  <property name="package.dir" value="${basedir}/dist/${plugin.name}"/>
+  <property name="plugin.dir" value="${basedir}/plugin"/>  
+  <property name="plugin.lib.dir" value="${plugin.dir}/lib"/>
+  <property name="wordinator.materials.dir" value="${temp.dir}/wordinator"/>
+  <property name="wordinator.materials.timestamp" value="${wordinator.materials.dir}/.downloadtimestamp"/>
+  
+  <!-- set the operating system test properties -->
+  <condition property="isMac" value="true">
+    <os family="mac" />
+  </condition>
+  
+  <condition property="isWindows" value="true">
+    <os family="windows" />
+  </condition>
+  
+  <condition property="isUnix" value="true">
+    <os family="unix" />
+  </condition>  
+  
+  <target name="set-maven-command-windows" if="isWindows">
+    <property name="maven-command" value="mvn.cmd"/>
+  </target> 
+  
+  <target name="set-maven-command-unix" if="isUnix">
+    <property name="maven-command" value="mvn"/>
+  </target> 
+
+  <target name="set-maven-command-mac" if="isMac">
+    <property name="maven-command" value="mvn"/>
+  </target> 
+  
+  <target name="init">
+    <buildnumber/>
+    <tstamp/>
+  </target>
+
+  <target name="check-wordinator-materials-uptodate" depends="init">
+    <uptodate property="wordinator.materials.uptodate"
+      srcfile="${basedir}/version.properties"
+      targetfile="${wordinator.materials.timestamp}"
+      >      
+    </uptodate>
+    <property name="wordinator.materials.uptodate" value="false"/>
+    <echo>wordinator.materials.uptodate=${wordinator.materials.uptodate}</echo>
+  </target>
+  
+  <target name="get-dependencies" depends="check-wordinator-materials-uptodate" unless="${wordinator.materials.uptodate}" 
+    description="Gets the Wordinator materials and other dependencies"
+    >
+    <!-- FIXME: We could check that the downloaded wordinator files are up to date with version.properties
+      -->
+    <delete dir="${temp.dir}" failonerror="false"/>
+    <mkdir dir="${temp.dir}"/>
+    <property name="wordinator.zip" value="${temp.dir}/wordinator.zip"/>
+    <get dest="${wordinator.zip}" 
+      src="https://github.com/drmacro/wordinator/releases/download/${wordinator.version}/wordinator_${wordinator.version}.zip"
+    />
+    <unzip src="${wordinator.zip}" dest="${wordinator.materials.dir}"/>
+    <touch file="${wordinator.materials.timestamp}"/>
+    
+  </target>
+  
+  <target name="build-plugin" depends="init">
+    <delete dir="${package.dir}" failonerror="false"/>
+    <mkdir dir="${package.dir}"/>
+    <copy todir="${package.dir}">
+      <fileset dir="${plugin.dir}">
+        <include name="**/*"/>
+        <exclude name="lib/*.md"/>
+      </fileset>
+    </copy>
+  </target>
+  
+  <target name="package" depends="build-plugin, get-dependencies">
+    
+  </target>
+  
+  
+</project>

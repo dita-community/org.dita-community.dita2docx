@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project basedir="." name="org.dita-community.dita2docx">
+
+<!--
+    <dita:extension id="dita.conductor.html5.param" behavior="org.dita.dost.platform.InsertAction"/>
+    -->
+  
+  <target name="dita2dc-docx">
+    <!-- Runs the DITA2HTML5 transform and then runs the Wordinator against
+         the resulting HTML.
+      -->
+    <antcall target="dita2html5">
+      <param name="nav-toc" value="false"/>
+      <dita:extension id="dita.conductor.dc-dita2docx.html5.param" behavior="org.dita.dost.platform.InsertAction"/>
+    </antcall>
+    
+    <antcall target="dita2dc-apply-wordinator">
+      <dita:extension id="dita.conductor.dc-dita2docx.wordinator.param" behavior="org.dita.dost.platform.InsertAction"/>
+    </antcall>
+  </target>
+  
+  
+</project>
