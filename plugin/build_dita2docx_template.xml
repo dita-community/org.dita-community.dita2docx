@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project basedir="." name="org.dita-community.dita2docx">
+<project basedir="." name="org.dita-community.dita2docx"
+  xmlns:dita="http://dita-ot.sourceforge.net"
+  >
 
 <!--
     <dita:extension id="dita.conductor.html5.param" behavior="org.dita.dost.platform.InsertAction"/>
@@ -10,14 +12,30 @@
          the resulting HTML.
       -->
     <antcall target="dita2html5">
-      <param name="nav-toc" value="false"/>
+      <param name="nav-toc" value="none"/>
+      <!-- Generate a single chunk from the input map -->
+      <param name="root-chunk-override" value="to-content select-branch"/>
+      <param name="args.hide.parent.link" value="true"/>
+      <param name="args.html5.classattr" value="true"/><!-- This is the default but want to emphasize that we want this -->
       <dita:extension id="dita.conductor.dc-dita2docx.html5.param" behavior="org.dita.dost.platform.InsertAction"/>
     </antcall>
     
-    <antcall target="dita2dc-apply-wordinator">
+    <antcall target="dc-docx-apply-wordinatory">
       <dita:extension id="dita.conductor.dc-dita2docx.wordinator.param" behavior="org.dita.dost.platform.InsertAction"/>
     </antcall>
   </target>
   
+  <target name="dc-docx-apply-wordinatory">
+    
+    <property name="webinator.jar" value="${dita.plugin.org.dita-community.dita2docx.dir}/lib/wordinator.jar"/>
+      
+    <java jar="${webinator.jar}" failonerror="true" fork="true">
+      <arg line="-i ${input.html}"/>
+      <arg line="-o ${OUTDIR}"/>
+      <arg line="-x ${ditahtml2docx.xsl}"/>
+      <arg line="-t ${ditahtml2docx.dotx}"/>
+    </java>
+    
+  </target>
   
 </project>

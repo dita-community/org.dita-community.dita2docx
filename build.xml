@@ -6,6 +6,10 @@
   <property file=".build.properties"/>
   <property file="version.properties"/>
   
+  <property name="dita-ot-dir" value="c:\dita-ot"/>
+  <property name="version" value="0.0.0"/><!-- Plugin version -->
+  <property name="wordinator.version" value="0.9.1"/><!-- Version of Wordinator to include -->
+  
   
   <property name="plugin.name" value="org.dita-community.dita2docx"/>
   <property name="build.dir" value="${basedir}/build"/> 
@@ -16,6 +20,7 @@
   <property name="plugin.lib.dir" value="${plugin.dir}/lib"/>
   <property name="wordinator.materials.dir" value="${temp.dir}/wordinator"/>
   <property name="wordinator.materials.timestamp" value="${wordinator.materials.dir}/.downloadtimestamp"/>
+  <property name="plugin.deploy.target" location="${dita-ot-dir}/plugins"/>
   
   <!-- set the operating system test properties -->
   <condition property="isMac" value="true">
@@ -82,10 +87,40 @@
         <exclude name="lib/*.md"/>
       </fileset>
     </copy>
+    <copy todir="${package.dir}/lib">
+      <fileset dir="${wordinator.materials.dir}">
+        <include name="**/*.jar"/>
+      </fileset>
+    </copy>
   </target>
   
   <target name="package" depends="build-plugin, get-dependencies">
+    <property name="zip.file" value="${dist.dir}/${plugin.name}_${version}.zip"/>
+    <zip basedir="${package.dir}" destfile="${zip.file}">
+      <fileset dir="${package.dir}">
+        <include name="${plugin.name}/**/*"/>
+      </fileset>
+    </zip>
     
+  </target>
+  
+  <target name="deploy-plugin" depends="package" description="Deploy the plugin to the configured local Open Toolkit">
+    <echo>Deploying plugin ${plugin.name} to ${dita-ot-dir}...</echo>
+    <exec dir="${dita-ot-dir}/bin" executable="/bin/bash">
+      <arg value="dita"/>
+      <arg value='"--install=${zip.file}"'/>
+      <arg value="--force"/>
+    </exec>
+    <echo>Plugins:</echo>
+    <exec dir="${dita-ot-dir}/bin" executable="/bin/bash">
+      <arg value="dita"/>
+      <arg value='--plugins'/>
+    </exec>
+    <echo>Transtypes:</echo>
+    <exec dir="${dita-ot-dir}/bin" executable="/bin/bash">
+      <arg value="dita"/>
+      <arg value='--transtypes'/>
+    </exec>
   </target>
   
   
