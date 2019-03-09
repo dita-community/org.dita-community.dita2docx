@@ -5,35 +5,50 @@
 
 <!--
     <dita:extension id="dita.conductor.html5.param" behavior="org.dita.dost.platform.InsertAction"/>
+    
     -->
   
-  <target name="dita2dc-docx">
+  <target name="dita2dc-docx" depends="dc-docx.init, dita2html5, dc-docx.apply-wordinator">
     <!-- Runs the DITA2HTML5 transform and then runs the Wordinator against
          the resulting HTML.
       -->
-    <antcall target="dita2html5">
-      <param name="nav-toc" value="none"/>
-      <!-- Generate a single chunk from the input map -->
-      <param name="root-chunk-override" value="to-content select-branch"/>
-      <param name="args.hide.parent.link" value="true"/>
-      <param name="args.html5.classattr" value="true"/><!-- This is the default but want to emphasize that we want this -->
-      <dita:extension id="dita.conductor.dc-dita2docx.html5.param" behavior="org.dita.dost.platform.InsertAction"/>
-    </antcall>
     
-    <antcall target="dc-docx-apply-wordinatory">
-      <dita:extension id="dita.conductor.dc-dita2docx.wordinator.param" behavior="org.dita.dost.platform.InsertAction"/>
-    </antcall>
+  </target>
+    
+  <target name="dc-docx.init">    
+    <property name="nav-toc" value="none"/>
+    <!-- Generate a single chunk from the input map -->
+    <property name="args.xsl" value="${dita.plugin.org.dita-community.dita2docx.dir}/xsl/dita2html5xml.xsl"/>
+    <property name="root-chunk-override" value="to-content select-branch"/>
+    <property name="args.hide.parent.link" value="true"/>
+    <property name="args.html5.classattr" value="true"/><!-- This is the default but want to emphasize that we want this -->
+    <dita:extension id="dita.conductor.dc-dita2docx.html5.param" behavior="org.dita.dost.platform.InsertAction"/>
+      
+    <property name="dc.dita2docx.dotx" value="${dita.plugin.org.dita-community.dita2docx.dir}/docx/generic-dita.dotx"/>
+    <property name="dc.dita2docx.xsl" value="${dita.plugin.org.dita-community.dita2docx.dir}/xsl/dita2docx.xsl"/>
+    <property name="webinator.jar" value="${dita.plugin.org.dita-community.dita2docx.dir}/lib/wordinator.jar"/>
+  
   </target>
   
-  <target name="dc-docx-apply-wordinatory">
+  <target name="dc-docx.apply-wordinator">
     
-    <property name="webinator.jar" value="${dita.plugin.org.dita-community.dita2docx.dir}/lib/wordinator.jar"/>
-      
+    <!--
+          input: ${html5.map.url}
+    destdir: ${dita.output.dir}
+    <param name="OUTPUTDIR" expression="${dita.output.dir}"/>
+
+   -->
+       
+    <basename property="mapBaseName" file="${html5.map.url}" suffix=".ditamap"/>
+    <property name="input.html" value="${dita.output.dir}/${mapBaseName}.html"/>
+    
+    <dita:extension id="dita.conductor.dc-dita2docx.wordinator.param" behavior="org.dita.dost.platform.InsertAction"/>
+    
     <java jar="${webinator.jar}" failonerror="true" fork="true">
       <arg line="-i ${input.html}"/>
-      <arg line="-o ${OUTDIR}"/>
-      <arg line="-x ${ditahtml2docx.xsl}"/>
-      <arg line="-t ${ditahtml2docx.dotx}"/>
+      <arg line="-o ${dita.output.dir}"/>
+      <arg line="-x ${dc.dita2docx.xsl}"/>
+      <arg line="-t ${dc.dita2docx.dotx}"/>
     </java>
     
   </target>

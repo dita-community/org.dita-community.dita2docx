@@ -8,9 +8,14 @@
   <require plugin="org.dita.html5"/>
   
   <transtype name="dc-docx">
-    <param name="dotx" 
+    <param name="dc.dita2docx.dotx" 
       type="uri"
       desc="Specifies the DOTX Word template to use in constructing the result DOCX files. Default is built-in DITA-specific DOTX."
+      required="false"
+    />
+    <param name="dc.dita2docx.xsl" 
+      type="uri"
+      desc="Specifies the HTML-to-SWPX transform to use in place of the built-in transform."
       required="false"
     />
     <param name="chunkLevel"

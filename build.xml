@@ -92,6 +92,11 @@
         <include name="**/*.jar"/>
       </fileset>
     </copy>
+    <copy todir="${package.dir}/xsl">
+      <fileset dir="${wordinator.materials.dir}/xsl">
+        <include name="**/*"/>
+      </fileset>
+    </copy>
   </target>
   
   <target name="package" depends="build-plugin, get-dependencies">
