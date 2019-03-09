@@ -97,6 +97,11 @@
         <include name="**/*"/>
       </fileset>
     </copy>
+    <copy todir="${package.dir}/doctypes">
+      <fileset dir="${wordinator.materials.dir}/doctypes">
+        <include name="**/*"/>
+      </fileset>
+    </copy>
   </target>
   
   <target name="package" depends="build-plugin, get-dependencies">

@@ -18,7 +18,7 @@
       desc="Specifies the HTML-to-SWPX transform to use in place of the built-in transform."
       required="false"
     />
-    <param name="chunkLevel"
+    <param name="dc.dita2docx.chunkLevel"
       type="enum"
       desc="Specifies the hierarchical level down to which to make individual DOCX files."
       required="false"
@@ -32,7 +32,7 @@
     </param>
   </transtype>
   
-  <extension-point id="xsl.dita2docx" name="HTML5 to SWPX transform extension point"/>
+  <extension-point id="xsl.dc.dita2docx" name="HTML5 to SWPX transform extension point"/>
   <!-- NOTE: Use normal HTML5 extensions in your own plugin to customize how the HTML is 
              generated.
     -->

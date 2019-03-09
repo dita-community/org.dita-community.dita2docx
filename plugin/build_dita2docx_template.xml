@@ -26,6 +26,7 @@
       
     <property name="dc.dita2docx.dotx" value="${dita.plugin.org.dita-community.dita2docx.dir}/docx/generic-dita.dotx"/>
     <property name="dc.dita2docx.xsl" value="${dita.plugin.org.dita-community.dita2docx.dir}/xsl/dita2docx.xsl"/>
+    <property name="dc.dita2docx.chunkLevel" value="root"/>
     <property name="webinator.jar" value="${dita.plugin.org.dita-community.dita2docx.dir}/lib/wordinator.jar"/>
   
   </target>
@@ -49,6 +50,7 @@
       <arg line="-o ${dita.output.dir}"/>
       <arg line="-x ${dc.dita2docx.xsl}"/>
       <arg line="-t ${dc.dita2docx.dotx}"/>
+<!--      <arg line="-c ${dc.dita2docx.chunkLevel}"/>-->
     </java>
     
   </target>

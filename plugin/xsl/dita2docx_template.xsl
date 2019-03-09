@@ -20,7 +20,7 @@
   
   <xsl:import href="ditahtml2docx/ditahtml2docx.xsl"/>
   
-  <dita:extension id="xsl.dita2docx" 
+  <dita:extension id="xsl.dc.dita2docx" 
     behavior="org.dita.dost.platform.ImportXSLAction" 
     xmlns:dita="http://dita-ot.sourceforge.net"
   />
